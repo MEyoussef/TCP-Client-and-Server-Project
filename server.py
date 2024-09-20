@@ -24,18 +24,15 @@
 
 # .connect() is used on the client side to connect to the server on specific ip address and port?
 
-from dotenv import load_dotenv
 import socket
 
-load_dotenv()
-
 HOST_IP = "192.168.1.28" # my PC static ip address
-PORT = 12345 # the port that allows devices to share data
+PORT = 443 # the port that allows devices to share data
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((HOST_IP, PORT))
-    server_socket.listen(1)
+    server_socket.listen(1) # currently accepting one connection "more on the way"
     print(f"Server started on HOST_IP on port number {PORT}. Waiting for client connection")
 
     conn, adrr = server_socket.accept()
@@ -43,10 +40,10 @@ def start_server():
 
     while True:
         data = conn.recv(1024).decode() # recive data and decode it
-        if not data or data == 'exit':
+        if not data:
             break
         print(f"Client: {data}")
-        send_data = input("server: ") 
+        send_data = input("server: ")
         conn.send(send_data.encode()) # send data to the client
 
     conn.close() # close the connection
