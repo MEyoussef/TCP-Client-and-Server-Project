@@ -23,3 +23,35 @@
 # It’s not the same as the listening socket that the server is using to accept new connections (keep that in mind)
 
 # .connect() is used on the client side to connect to the server on specific ip address and port?
+
+import os
+from dotenv import load_dotenv
+import socket
+
+load_dotenv()
+
+HOST_IP = os.getenv("HOST_IP") # get server ip address
+PORT = 12345 # the port that allows devices to share data
+
+def start_server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((HOST_IP, PORT))
+    server_socket.listen(1)
+    print(f"Server started on {HOST_IP}:{PORT}. Waiting for connection")
+
+    conn, adrr = server_socket.accept()
+    print(f"Connection established with {adrr}")
+
+    while True:
+        data = conn.recv(1024).decode() # recive data and decode it
+        if not data:
+            break
+        print(f"Client: {data}")
+        send_data = input("server: ") 
+        conn.send(send_data.encode()) # send data to the client
+
+    conn.close() # close the connection
+    print("Connection closed.")
+
+if __name__ == "__main__": # This block ensures that start_server() (or any code within it) will only be executed when you run the script directly.
+    start_server()
