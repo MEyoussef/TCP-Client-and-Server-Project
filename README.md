@@ -11,6 +11,7 @@ This project implements a basic TCP client-server system using Python's socket m
 - Python and the socket module for TCP communication
 
 ## How to Use:
+- install python or python editor on your device (<a href = "https://www.python.org/downloads/">for windows</a> | <a href = "https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en_US">for android</a>)
 - Clone the repository.
 - Run the client script and connect to the server. (Syntax : py client.py)
 - Exchange text messages between the server and you.
