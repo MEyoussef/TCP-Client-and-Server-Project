@@ -12,5 +12,5 @@ This project implements a basic TCP client-server system using Python's socket m
 
 ## How to Use:
 - Clone the repository.
-- Run the client script and connect to the server.
+- Run the client script and connect to the server. (Syntax : py client.py)
 - Exchange text messages between the server and you.
