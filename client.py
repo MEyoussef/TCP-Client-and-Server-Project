@@ -1,13 +1,13 @@
-import os
 from dotenv import load_dotenv
 import socket
 
 load_dotenv()
 
-HOST_IP = os.getenv("HOST_IP") # get server ip address
+HOST_IP = "192.168.1.28" # my PC static ip address
 PORT = 12345 # the port that allows devices to share data
 
 def start_client():
+    print("== WELCOME TO MY TCP CLIENT AND SERVER PROJECT ==")
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((HOST_IP, PORT))
     print("enter (exit) to break the connection")
@@ -23,5 +23,5 @@ def start_client():
     client_socket.close() # close the connection
     print("Connection closed.")
 
-if __name__ == "__main__": # This block ensures that start_server() (or any code within it) will only be executed when you run the script directly.
+if __name__ == "__main__": # This block ensures that start_client() (or any code within it) will only be executed when you run the script directly.
     start_client()
