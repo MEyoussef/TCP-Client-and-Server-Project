@@ -34,17 +34,18 @@ HOST_IP = os.getenv("HOST_IP") # get server ip address
 PORT = 12345 # the port that allows devices to share data
 
 def start_server():
+    print("== WELCOME TO MY TCP CLIENT AND SERVER PROJECT ==")
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((HOST_IP, PORT))
     server_socket.listen(1)
-    print(f"Server started on {HOST_IP}:{PORT}. Waiting for connection")
+    print(f"Server started on HOST_IP on port number {PORT}. Waiting for client connection")
 
     conn, adrr = server_socket.accept()
-    print(f"Connection established with {adrr}")
+    print(f"Connection established with HOST_IP")
 
     while True:
         data = conn.recv(1024).decode() # recive data and decode it
-        if not data:
+        if not data or data == 'exit':
             break
         print(f"Client: {data}")
         send_data = input("server: ") 
