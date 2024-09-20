@@ -13,6 +13,8 @@ def start_client():
         send_data  = input("client: ") # enter data
         if send_data == "exit":
             break
+        while len(send_data) < 1:
+            send_data  = input("client: ") # enter data
         client_socket.send(send_data.encode()) # send data
         data = client_socket.recv(1024).decode() # recive data from the other side
         if not data:
