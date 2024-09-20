@@ -1,10 +1,7 @@
-from dotenv import load_dotenv
 import socket
 
-load_dotenv()
-
 HOST_IP = "192.168.1.28" # my PC static ip address
-PORT = 12345 # the port that allows devices to share data
+PORT = 443 # the port that allows devices to share data
 
 def start_client():
     print("== WELCOME TO MY TCP CLIENT AND SERVER PROJECT ==")
@@ -14,6 +11,8 @@ def start_client():
 
     while True:
         send_data  = input("client: ") # enter data
+        if send_data == "exit":
+            break
         client_socket.send(send_data.encode()) # send data
         data = client_socket.recv(1024).decode() # recive data from the other side
         if not data:
