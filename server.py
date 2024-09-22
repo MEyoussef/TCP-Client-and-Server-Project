@@ -27,27 +27,47 @@
 import socket
 
 HOST_IP = "192.168.1.28" # my PC static ip address
+
 PORT = 443 # the port that allows devices to share data
 
+BUFFER_SIZE = 4096 # receive 4096 bytes each time
+
 def start_server():
+
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     server_socket.bind((HOST_IP, PORT))
+
     server_socket.listen(1) # currently accepting one connection "more on the way"
+
     print(f"Server started on HOST_IP on port number {PORT}. Waiting for client connection")
 
     conn, adrr = server_socket.accept()
-    print(f"Connection established with HOST_IP")
 
+    print(f"Connection established with HOST_IP")
+    
     while True:
-        data = conn.recv(1024).decode() # recive data and decode it
+
+        data = conn.recv(BUFFER_SIZE).decode() # recive data and decode it
+
         if not data:
+
             break
+
         print(f"Client: {data}")
+
         send_data = input("server: ")
+
+        while len(send_data) < 1:
+
+            send_data = input("server: ")
+
         conn.send(send_data.encode()) # send data to the client
 
     conn.close() # close the connection
+
     print("Connection closed.")
 
 if __name__ == "__main__": # This block ensures that start_server() (or any code within it) will only be executed when you run the script directly.
+    
     start_server()
