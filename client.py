@@ -30,7 +30,7 @@ def start_client():
         if os.path.exists(file_name):
 
             file_size = os.path.getsize(file_name)
-            client_socket.send(f"{file_name}, {file_size}")
+            client_socket.send(file_name.encode(), file_size.encode())
 
             with open(file_name, "rb") as f:
 
@@ -43,7 +43,7 @@ def start_client():
 
                     client_socket.sendall(bytes_read)
 
-            client_socket.close()
+            print(f"File {file_name} sent successfully.")
 
     elif choose_operation == "text":
 
