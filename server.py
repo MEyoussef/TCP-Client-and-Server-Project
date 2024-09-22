@@ -25,84 +25,29 @@
 # .connect() is used on the client side to connect to the server on specific ip address and port?
 
 import socket
-import os
 
 HOST_IP = "192.168.1.28" # my PC static ip address
-
 PORT = 443 # the port that allows devices to share data
 
-BUFFER_SIZE = 4096 # receive 4096 bytes each time
-
-
 def start_server():
-
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     server_socket.bind((HOST_IP, PORT))
-
     server_socket.listen(1) # currently accepting one connection "more on the way"
-
     print(f"Server started on HOST_IP on port number {PORT}. Waiting for client connection")
 
     conn, adrr = server_socket.accept()
-
     print(f"Connection established with HOST_IP")
-    
+
     while True:
-
-        data = conn.recv(BUFFER_SIZE).decode() # recive data and decode it
-
-        if data == "text":
-            # Handle text communication
-            handle_text(conn)
-        elif data == "file share":
-            # Handle file receiving
-            handle_file(conn)
-        else:
-            print("Invalid operation received. Closing connection.")
+        data = conn.recv(1024).decode() # recive data and decode it
+        if not data:
             break
+        print(f"Client: {data}")
+        send_data = input("server: ")
+        conn.send(send_data.encode()) # send data to the client
 
     conn.close() # close the connection
     print("Connection closed.")
 
-def handle_text(conn):
-    while True:
-        data = conn.recv(BUFFER_SIZE).decode()
-
-        if not data:
-            break
-
-        print(f"client: {data}")
-
-        send_data = input("server: ")
-
-        while len(send_data) < 1:
-            send_data = input("server: ")
-
-        conn.send(send_data.encode())
-
-def handle_file(conn):
-    recived = conn.recv(BUFFER_SIZE).decode()
-    file_name, file_size = recived.spit(",")
-    file_name = file_name.strip()
-    file_size = int(file_size.strip())
-
-    print(f"Receiving file: {file_name} of size {file_size} bytes")
-
-    with open(file_name, "wb") as f:
-        total_received = 0
-        while total_received < file_size:
-            bytes_read = conn.recv(BUFFER_SIZE).decode()
-            
-            if not bytes_read:
-                break
-
-            f.write(bytes_read)
-            total_received += len(bytes_read)
-            print(f"Received {total_received} of {file_size} bytes")
-
-        print(f"File {file_name} received successfully.")
-
 if __name__ == "__main__": # This block ensures that start_server() (or any code within it) will only be executed when you run the script directly.
-    
     start_server()
