@@ -5,6 +5,8 @@ HOST_IP = "192.168.1.28" # my PC static ip address
 
 PORT = 443 # the port that allows devices to share data
 
+BUFFER_SIZE = 4096 # send 4096 bytes each time step
+
 def start_client():
 
     print("== WELCOME TO MY TCP CLIENT AND SERVER PROJECT ==")
@@ -20,36 +22,36 @@ def start_client():
 
     if choose_operation == "file share":
 
-        BUFFER_SIZE = 4096 # send 4096 bytes each time step
 
         file_name = input("enter the file name: ")
 
         while len(file_name) < 1 or not os.path.exists(file_name):
             file_name = input("enter valid file name: ")
 
-        if os.path.exists(file_name):
+        file_size = os.path.getsize(file_name)
+        client_socket.send(f"{file_name},{file_size}".encode())
 
-            file_size = os.path.getsize(file_name)
-            client_socket.send(file_name.encode(), file_size.encode())
+        with open(file_name, "rb") as f:
 
-            with open(file_name, "rb") as f:
+            while True:
 
-                while True:
+                bytes_read = f.read(BUFFER_SIZE)
 
-                    bytes_read = f.read(BUFFER_SIZE)
+                if not bytes_read:
+                    break
 
-                    if not BUFFER_SIZE:
-                        break
+                client_socket.sendall(bytes_read)
 
-                    client_socket.sendall(bytes_read)
-
-            print(f"File {file_name} sent successfully.")
+        print(f"File {file_name} sent successfully.")
+        client_socket.close()
+        print("Connection closed.")
 
     elif choose_operation == "text":
 
+
         while True:
 
-            send_data  = input("client: ") # enter data
+            send_data = input("client: ") # enter data
 
             if send_data == "exit":
 
@@ -57,7 +59,7 @@ def start_client():
 
             while len(send_data) < 1:
 
-                send_data  = input("client: ") # enter data
+                send_data  = input("client: ") # enter valid data
 
             client_socket.send(send_data.encode()) # send data
 

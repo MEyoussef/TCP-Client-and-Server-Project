@@ -25,6 +25,7 @@
 # .connect() is used on the client side to connect to the server on specific ip address and port?
 
 import socket
+import os
 
 HOST_IP = "192.168.1.28" # my PC static ip address
 
@@ -32,14 +33,14 @@ PORT = 443 # the port that allows devices to share data
 
 BUFFER_SIZE = 4096 # receive 4096 bytes each time
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-server_socket.bind((HOST_IP, PORT))
-
-server_socket.listen(1) # currently accepting one connection "more on the way"
 
 def start_server():
 
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    server_socket.bind((HOST_IP, PORT))
+
+    server_socket.listen(1) # currently accepting one connection "more on the way"
 
     print(f"Server started on HOST_IP on port number {PORT}. Waiting for client connection")
 
@@ -54,7 +55,7 @@ def start_server():
         if data == "text":
             # Handle text communication
             handle_text(conn)
-        elif data == "share file":
+        elif data == "file share":
             # Handle file receiving
             handle_file(conn)
         else:
@@ -62,14 +63,15 @@ def start_server():
             break
 
     conn.close() # close the connection
-
     print("Connection closed.")
 
 def handle_text(conn):
     while True:
         data = conn.recv(BUFFER_SIZE).decode()
+
         if not data:
             break
+
         print(f"client: {data}")
 
         send_data = input("server: ")
@@ -77,7 +79,7 @@ def handle_text(conn):
         while len(send_data) < 1:
             send_data = input("server: ")
 
-        conn.send(send_data)
+        conn.send(send_data.encode())
 
 def handle_file(conn):
     recived = conn.recv(BUFFER_SIZE).decode()
@@ -91,11 +93,12 @@ def handle_file(conn):
         total_received = 0
         while total_received < file_size:
             bytes_read = conn.recv(BUFFER_SIZE).decode()
+            
             if not bytes_read:
                 break
 
             f.write(bytes_read)
-            total_received += bytes_read
+            total_received += len(bytes_read)
             print(f"Received {total_received} of {file_size} bytes")
 
         print(f"File {file_name} received successfully.")
