@@ -1,5 +1,4 @@
 import socket
-import os
 
 HOST_IP = "192.168.1.28" # my PC static ip address
 PORT = 443 # the port that allows devices to share data

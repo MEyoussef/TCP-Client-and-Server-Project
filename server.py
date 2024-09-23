@@ -25,7 +25,6 @@
 # .connect() is used on the client side to connect to the server on specific ip address and port?
 
 import socket
-import os
 
 HOST_IP = "192.168.1.28" # my PC static ip address
 PORT = 443 # the port that allows devices to share data
@@ -39,18 +38,18 @@ def start_server():
     conn, adrr = server_socket.accept()
     print(f"Connection established with HOST_IP")
 
-    handle_texting(conn)
+    handle_texting(conn, adrr[0])
 
-def handle_texting(conn):
+def handle_texting(conn, client_ip):
     while True:
         data = conn.recv(1024).decode()
         if not data:
             break
 
         client_msg = f"client: {data}"
-        file_open = open("chatLogs.txt", "a")
-        file_open.write(client_msg)
-        file_open.write("\n")
+        with open("chatLogs.txt", "a") as file_open:
+            file_open.write(f"{client_ip} : {data}")
+            file_open.write("\n")
 
         print(client_msg)
         send_data = input("server: ")
@@ -58,10 +57,11 @@ def handle_texting(conn):
             send_data = input("server: ")
         conn.send(send_data.encode()) # Send data to the client
         server_msg = f"server: {send_data}"
-        file_open = open("chatLogs.txt", "a")
-        file_open.write(server_msg)
-        file_open.write("\n")
-    file_open.write("[ END OF THE CHAT HISTORY. ]\n")
+        with open("chatLogs.txt", "a") as file_open:
+            file_open.write(server_msg)
+    with open("chatLogs.txt", "a") as file_open:
+        file_open.write("\n[ END OF THE CHAT HISTORY. ]\n")
+    file_open.close()
     conn.close() # close the connection
     print("Connection closed.")
 
