@@ -6,10 +6,11 @@ PORT = 443 # the port that allows devices to share data
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST_IP, PORT))
 
+
 def start_client():
     print("== WELCOME TO MY TCP CLIENT AND SERVER PROJECT ==")
     print("enter (exit) to break the connection")
-
+    
     handle_texting()
 
 def handle_texting():

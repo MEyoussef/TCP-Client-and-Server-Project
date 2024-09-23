@@ -61,7 +61,7 @@ def handle_texting(conn):
         file_open = open("chatLogs.txt", "a")
         file_open.write(server_msg)
         file_open.write("\n")
-
+    file_open.write("[ END OF THE CHAT HISTORY. ]\n")
     conn.close() # close the connection
     print("Connection closed.")
 
