@@ -25,6 +25,7 @@
 # .connect() is used on the client side to connect to the server on specific ip address and port?
 
 import socket
+import os
 
 HOST_IP = "192.168.1.28" # my PC static ip address
 PORT = 443 # the port that allows devices to share data
@@ -38,13 +39,28 @@ def start_server():
     conn, adrr = server_socket.accept()
     print(f"Connection established with HOST_IP")
 
+    handle_texting(conn)
+
+def handle_texting(conn):
     while True:
-        data = conn.recv(1024).decode() # recive data and decode it
+        data = conn.recv(1024).decode()
         if not data:
             break
-        print(f"Client: {data}")
+
+        client_msg = f"client: {data}"
+        file_open = open("chatLogs.txt", "a")
+        file_open.write(client_msg)
+        file_open.write("\n")
+
+        print(client_msg)
         send_data = input("server: ")
-        conn.send(send_data.encode()) # send data to the client
+        while len(send_data) == 0:
+            send_data = input("server: ")
+        conn.send(send_data.encode()) # Send data to the client
+        server_msg = f"server: {send_data}"
+        file_open = open("chatLogs.txt", "a")
+        file_open.write(server_msg)
+        file_open.write("\n")
 
     conn.close() # close the connection
     print("Connection closed.")
